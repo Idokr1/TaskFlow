@@ -1,0 +1,158 @@
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  list-style: none;
+}
+
+/* Status indicator — left border color */
+.task-item--status-pending {
+  border-left: 4px solid #94a3b8;
+}
+
+.task-item--status-in_progress {
+  border-left: 4px solid #f59e0b;
+}
+
+.task-item--status-completed {
+  border-left: 4px solid #10b981;
+}
+
+.task-item--status-completed .task-item__title {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* Subtle background tint based on priority */
+.task-item--priority-high {
+  background-color: #fffaf9;
+}
+
+.task-item--priority-low {
+  background-color: #fafbfc;
+}
+
+.task-item__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.task-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.task-item__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  word-wrap: break-word;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Priority badge — bold visual indicator */
+.task-item__priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.task-item__priority-badge--high {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.task-item__priority-badge--medium {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.task-item__priority-badge--low {
+  background-color: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.task-item__description {
+  margin: 0;
+  color: #444;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.task-item__meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.task-item__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+  min-width: 9rem;
+}
+
+.task-item__select-label select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.task-item__delete {
+  padding: 0.4rem 0.75rem;
+  background-color: #fff;
+  border: 1px solid #c0392b;
+  color: #c0392b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.task-item__delete:hover:not(:disabled) {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+.task-item__delete:disabled,
+.task-item__select-label select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
