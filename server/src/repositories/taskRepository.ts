@@ -9,7 +9,7 @@ import type { Task, CreateTaskDTO, UpdateTaskDTO } from '../types/task';
  * interface — this keeps callers identical whether the repo is in-memory
  * or talks to a real database.
  *
- * Data is lost on process restart, which is acceptable per the assignment.
+ * Data is lost on process restart.
  */
 export class InMemoryTaskRepository implements ITaskRepository {
   private readonly store = new Map<string, Task>();

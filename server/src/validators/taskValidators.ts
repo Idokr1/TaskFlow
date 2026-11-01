@@ -22,7 +22,7 @@ const DESCRIPTION_MAX_LENGTH = 2000;
  *   - returns a fully-typed DTO on success.
  *
  * Why hand-written (no zod/joi):
- *   The reviewer reads the code, not a schema. Hand-written rules keep every
+ *   Hand-written rules keep every
  *   validation decision visible at the call site instead of hidden inside a library.
  */
 

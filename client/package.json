@@ -1,7 +1,7 @@
 {
   "name": "taskflow-client",
   "version": "1.0.0",
-  "description": "TaskFlow Assessment — React + TypeScript client",
+  "description": "TaskFlow — React + TypeScript client",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,7 +1,7 @@
 {
   "name": "taskflow-server",
   "version": "1.0.0",
-  "description": "TaskFlow Assessment — Express + TypeScript REST API for task management",
+  "description": "TaskFlow — Express + TypeScript REST API for task management",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

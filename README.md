@@ -1,6 +1,6 @@
-# TaskFlow-Assessment
+# TaskFlow
 
-A small task-management application built as a home assignment. It demonstrates a clean separation between an Express + TypeScript REST API and a React + TypeScript single-page client, with a focus on **code clarity, type safety, error handling, and input validation** over feature breadth.
+A small task-management application that demonstrates a clean separation between an Express + TypeScript REST API and a React + TypeScript single-page client, with a focus on **code clarity, type safety, error handling, and input validation** over feature breadth.
 
 ---
 
@@ -26,7 +26,7 @@ The application manages a list of tasks. Each task has a `title`, `description`,
 - **Filter** the visible list by status (To Do / In Progress / Done / All)
 - **Sort** the visible list by creation date or priority
 
-Tasks are stored **in memory on the server** (per assignment permission). The data layer is wrapped in a Repository abstraction so that swapping to a real database would touch a single file.
+Tasks are stored **in memory on the server**. The data layer is wrapped in a Repository abstraction so that swapping to a real database would touch a single file.
 
 ---
 
@@ -52,7 +52,7 @@ Tasks are stored **in memory on the server** (per assignment permission). The da
 ## Project Structure
 
 ```
-TaskFlow-Assessment/
+TaskFlow/
 ├── README.md
 ├── .gitignore
 ├── server/
@@ -181,7 +181,7 @@ Base URL (development): `http://localhost:3001`
 {
   "id": "c8d4...-uuid",
   "title": "Write README",
-  "description": "Polish the README before submitting",
+  "description": "Polish the README before release",
   "status": "pending",
   "priority": "high",
   "createdAt": "2026-05-11T08:30:00.000Z"
@@ -192,7 +192,7 @@ Base URL (development): `http://localhost:3001`
 ```json
 {
   "title": "Write README",
-  "description": "Polish the README before submitting",
+  "description": "Polish the README before release",
   "status": "pending",
   "priority": "high"
 }
@@ -230,7 +230,7 @@ Error codes:
 
 ## Architecture & Assumptions
 
-This section is the heart of the documentation, because the reviewer reads the code rather than running it.
+This section explains the main design decisions.
 
 ### Separation of concerns (server)
 
@@ -252,12 +252,9 @@ routes → controllers → services → repository → in-memory store
 
 ### Why in-memory storage?
 
-The assignment explicitly allows it: *"ניתן לבצע חיבור לבסיס נתונים אך נקבל באהבה גם מבדקים שינהלו את המשימות בזיכרון."*  
-(*"You may connect to a database, but we'll also gladly accept tests that manage tasks in memory."*)
-
 We chose in-memory storage to:
 1. Keep setup trivial (no DB to install or configure).
-2. Focus the code review on **architecture and language proficiency**, not ORM boilerplate.
+2. Keep the focus on **architecture**, not ORM boilerplate.
 3. Still demonstrate the Repository pattern, so a real DB is a drop-in replacement.
 
 ### Error-handling strategy
@@ -280,13 +277,13 @@ Validation lives in `validators/taskValidators.ts`. Each function:
 
 This places **typed input at the controller boundary**, so every layer below the controller can assume valid data. The validator logic is intentionally simple and explicit — easy to read top-to-bottom.
 
-### Why no automated tests?
+### Testing
 
-The assignment describes a *"few-hour"* exercise and explicitly evaluates *code quality* rather than test coverage. Adding a test framework (Jest/Vitest + supertest) would expand scope without making the architecture clearer. The Repository pattern is deliberately built so tests *could* be added trivially — inject a fake repository into the service.
+The project has no automated tests yet. The Repository pattern is built so tests can be added easily: inject a fake repository into the service, and test the routes with supertest against the app from `app.ts`, which is built without starting a server.
 
-### Styling approach (CSS deliverable)
+### Styling approach
 
-The PDF lists `CSS` as one of the client deliverables alongside `components` and `hooks`. Here's how it was implemented and why.
+Here's how styling was implemented and why.
 
 **Approach: plain, hand-written CSS files co-located with their components.** No styling libraries, no preprocessors, no CSS-in-JS. Every rule that ends up in the browser is in a `.css` file you can read directly.
 
@@ -320,7 +317,7 @@ Every class begins with its component's name, so two components can't accidental
 
 | Alternative | Why we didn't pick it |
 |---|---|
-| **Tailwind / utility CSS** | Hides styling intent behind long class strings (`flex items-center gap-3 px-4 py-2 ...`). Adds a build step (PostCSS / JIT compilation) and a config file. For a project the reviewer reads but doesn't run, semantic class names tell the story better than utilities. |
+| **Tailwind / utility CSS** | Hides styling intent behind long class strings (`flex items-center gap-3 px-4 py-2 ...`). Adds a build step (PostCSS / JIT compilation) and a config file. For a project this size, semantic class names tell the story better than utilities. |
 | **CSS Modules** (`*.module.css`) | Vite supports them natively, but they add the `styles.foo` indirection in JSX. Our BEM convention already prevents collisions, so the extra abstraction wouldn't pay off at this size. |
 | **CSS-in-JS** (styled-components, Emotion) | Adds a runtime dependency that builds CSS strings on every render. Obscures the CSS from the browser dev-tools experience. Overkill for a static-feeling UI. |
 | **Sass / SCSS** | A preprocessor toolchain for benefits (nesting, variables) that modern CSS now offers natively. |
@@ -339,24 +336,24 @@ The whole CSS surface is roughly 400 lines — small enough to read in a single 
 - **`useTasks` hook** is the single source of truth for task state, loading flags, and error messages. Components stay presentational.
 - **`apiClient` utility** wraps `fetch` and normalizes errors into a single `ApiError` type, so the hook never deals with raw response objects.
 - **Mutations refetch** after success — simple and obviously correct. Optimistic updates would speed up the UI but obscure the data-flow story for a code reader.
-- **Errors and loading states are always rendered**: the `ErrorBanner` and `LoadingSpinner` components are wired to the hook's state, so the user (and the reviewer) always sees what's happening.
+- **Errors and loading states are always rendered**: the `ErrorBanner` and `LoadingSpinner` components are wired to the hook's state, so the user always sees what's happening.
 - **Filter and sort are pure UI state**: `App.tsx` owns `statusFilter` and `sortBy` and derives the visible list with `useMemo`. The server doesn't know about either — round-tripping for what a `[].filter()` can do would be wasteful. The hook stays storage-only.
 - **Server validation messages display inline in `TaskForm`**, not just in the global error banner. When the server rejects a submission (e.g., "title must be at least 3 characters"), the message appears next to the inputs that caused it. The form also clears the global banner to avoid showing the same message twice.
 
 ### Product features beyond CRUD
 
-The assignment says *"use your imagination"*. We added three product-thinking features without inflating scope:
+Three product features were added without inflating scope:
 
 1. **Priority field** (`low` | `medium` | `high`) on every task — defaulted to `medium` server-side, surfaced as a colored badge in the UI (red / amber / slate) and as a left-border color on each task row in combination with the status indicator.
 2. **Filter by status** (All / To Do / In Progress / Done) and **sort by** (Newest first / Oldest first / Priority high → low / Priority low → high). Both are pure UI state, recomputed via `useMemo` whenever the underlying list, filter, or sort option changes.
 3. **Strict input validation with graceful UI**: server enforces `title.length ≥ 3 after trim`, rejects whitespace-only titles with a specific message, and bounds `description` and the `priority` enum. The client mirrors these rules for fast feedback, and any server-side validation error is shown inline in the form rather than as an opaque banner.
 
 ### Assumptions
-1. Reviewers will read the code; the brief states this directly. UI polish is therefore minimal — just enough to make the data-flow visible.
+1. UI polish is intentionally minimal — just enough to make the data flow visible.
 2. The same machine runs both server and client in development.
 3. The server runs on port `3001` by default; the client (Vite) on port `5173`.
 4. Node 18+ is available (for `crypto.randomUUID`).
-5. The in-memory store starts empty on each server restart. This is acceptable per the brief.
+5. The in-memory store starts empty on each server restart.
 
 ---
 

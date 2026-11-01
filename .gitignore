@@ -9,7 +9,7 @@ build/
 **/build/
 
 # Environment files
-# .env is intentionally tracked for this submission (PDF deliverable);
+# .env holds dev-only defaults and is intentionally tracked;
 # local overrides should use *.local files instead.
 .env.local
 .env.*.local
